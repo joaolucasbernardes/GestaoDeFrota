@@ -38,4 +38,11 @@ public class VeiculoController {
 
         return ResponseEntity.created(location).body(veiculoSalvo);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Veiculo> buscarPorId(@PathVariable Long id) {
+        return veiculoRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
 }

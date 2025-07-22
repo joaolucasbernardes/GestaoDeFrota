@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class VeiculoRepository {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(VeiculoRepository.class);
+
     private final Map<Long, Veiculo> veiculos = new ConcurrentHashMap<>();
 
     private final Map<String, Veiculo> indicePorPlaca = new ConcurrentHashMap<>();
@@ -33,5 +35,22 @@ public class VeiculoRepository {
         indicePorPlaca.put(veiculo.getPlaca().toUpperCase(), veiculo);
 
         return veiculo;
+    }
+
+    public Optional<Veiculo> findById(Long id) {
+        return Optional.ofNullable(veiculos.get(id));
+    }
+
+    public void atualizaHodometro(Long id, Double novoHodometro) {
+        log.info("Tentando atualizar hodômetro para o veículo de ID: {}", id);
+        Optional<Veiculo> veiculoOpt = findById(id);
+
+        if (veiculoOpt.isPresent()) {
+            Veiculo veiculo = veiculoOpt.get();
+            veiculo.setHodometro(novoHodometro);
+            log.info("Hodômetro do veículo {} atualizado com sucesso para {}.", id, novoHodometro);
+        } else {
+            log.warn("Veículo com ID {} não encontrado para atualização de hodômetro.", id);
+        }
     }
 }

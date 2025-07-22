@@ -27,4 +27,8 @@ public class MotoristaRepository {
 
         return motorista;
     }
+
+    public Optional<Motorista> findById(Long id) {
+        return Optional.ofNullable(motoristas.get(id));
+    }
 }
