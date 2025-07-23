@@ -28,7 +28,7 @@ public class KafkaConsumerListener {
 
             log.info("Mensagem deserializada com sucesso: {}", message);
 
-            veiculoRepository.atualizaHodometro(message.veiculoId(), message.hodometro());
+            veiculoRepository.adicionarAbastecimento(message.veiculoId(), message);
 
         } catch (Exception e) {
             log.error("ERRO CRÍTICO ao deserializar ou processar mensagem do Kafka: {}", messageJson, e);

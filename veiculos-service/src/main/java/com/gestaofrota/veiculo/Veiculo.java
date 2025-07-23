@@ -1,8 +1,12 @@
 package com.gestaofrota.veiculo;
 
+import com.gestaofrota.veiculo.kafka.AbastecimentoMessage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +18,8 @@ public class Veiculo {
     private String modelo;
     private Integer anoFabricacao;
     private Double hodometro;
+
+    private List<AbastecimentoMessage> historicoAbastecimentos = new ArrayList<>();
+
 
 }

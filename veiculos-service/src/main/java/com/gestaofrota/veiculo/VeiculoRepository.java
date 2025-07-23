@@ -1,5 +1,6 @@
 package com.gestaofrota.veiculo;
 
+import com.gestaofrota.veiculo.kafka.AbastecimentoMessage;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -52,5 +53,15 @@ public class VeiculoRepository {
         } else {
             log.warn("Veículo com ID {} não encontrado para atualização de hodômetro.", id);
         }
+    }
+
+    public void adicionarAbastecimento(Long veiculoId, AbastecimentoMessage abastecimento) {
+        log.info("Tentando adicionar abastecimento ao histórico do veículo de ID: {}", veiculoId);
+        findById(veiculoId).ifPresent(veiculo -> {
+            veiculo.setHodometro(abastecimento.hodometro());
+            veiculo.getHistoricoAbastecimentos().add(abastecimento);
+
+            log.info("Abastecimento adicionado e hodômetro do veículo {} atualizado.", veiculoId);
+        });
     }
 }
