@@ -9,4 +9,5 @@ public class DesempenhoDTO {
     private Long veiculoId;
     private String placa;
     private Double consumoMedioKmLitro;
+    private Double custoMedioPorKm;
 }

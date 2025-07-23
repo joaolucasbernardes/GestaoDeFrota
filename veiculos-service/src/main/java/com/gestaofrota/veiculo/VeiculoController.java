@@ -61,11 +61,10 @@ public class VeiculoController {
 
     private DesempenhoDTO calcularEGerarDto(Veiculo veiculo) {
         List<AbastecimentoMessage> historico = veiculo.getHistoricoAbastecimentos();
-
         historico.sort(Comparator.comparing(AbastecimentoMessage::hodometro));
 
         if (historico.size() < 2) {
-            return new DesempenhoDTO(veiculo.getId(), veiculo.getPlaca(), 0.0);
+            return new DesempenhoDTO(veiculo.getId(), veiculo.getPlaca(), 0.0, 0.0);
         }
 
         AbastecimentoMessage primeiro = historico.get(0);
@@ -78,10 +77,25 @@ public class VeiculoController {
                 .mapToDouble(AbastecimentoMessage::litros)
                 .sum();
 
+        double custoTotal = historico.stream()
+                .skip(1)
+                .mapToDouble(abastecimento -> abastecimento.litros() * abastecimento.valorPorLitro())
+                .sum();
+
+
         double consumoMedio = (totalLitros > 0) ? distanciaTotal / totalLitros : 0.0;
+        double custoMedio = (distanciaTotal > 0) ? custoTotal / distanciaTotal : 0.0;
 
         consumoMedio = Math.round(consumoMedio * 100.0) / 100.0;
+        custoMedio = Math.round(custoMedio * 100.0) / 100.0;
 
-        return new DesempenhoDTO(veiculo.getId(), veiculo.getPlaca(), consumoMedio);
+        return new DesempenhoDTO(veiculo.getId(), veiculo.getPlaca(), consumoMedio, custoMedio);
+    }
+
+    @GetMapping("/{id}/abastecimentos")
+    public ResponseEntity<List<AbastecimentoMessage>> listarAbastecimentos(@PathVariable Long id) {
+        return veiculoRepository.findById(id)
+                .map(veiculo -> ResponseEntity.ok(veiculo.getHistoricoAbastecimentos()))
+                .orElse(ResponseEntity.notFound().build());
     }
 }
