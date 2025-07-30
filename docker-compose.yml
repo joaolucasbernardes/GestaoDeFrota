@@ -3,7 +3,6 @@ version: '3.8'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.3
-    hostname: zookeeper
     container_name: zookeeper
     ports:
       - "2181:2181"
@@ -13,7 +12,6 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.5.3
-    hostname: kafka
     container_name: kafka
     ports:
       - "9092:9092"
@@ -26,3 +24,41 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+  veiculos-service:
+    build:
+      context: .
+      dockerfile: veiculos-service/Dockerfile
+    container_name: veiculos-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+
+  motoristas-service:
+    build:
+      context: .
+      dockerfile: motoristas-service/Dockerfile
+    container_name: motoristas-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - kafka
+
+  abastecimentos-service:
+    build:
+      context: .
+      dockerfile: abastecimentos-service/Dockerfile
+    container_name: abastecimentos-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - veiculos-service
+      - motoristas-service
+    environment:
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      # Define as URLs para a comunicação interna do Docker
+      - URL_VEICULOS=http://veiculos-service:8080
+      - URL_MOTORISTAS=http://motoristas-service:8081

@@ -1,0 +1,11 @@
+# Ignora arquivos compilados do Maven
+**/target
+
+# Ignora pastas de IDE
+.idea/
+*.iml
+.vscode/
+
+# Ignora logs e arquivos do sistema
+.DS_Store
+*.log
