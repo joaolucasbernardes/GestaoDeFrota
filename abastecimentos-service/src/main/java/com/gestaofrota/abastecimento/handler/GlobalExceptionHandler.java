@@ -1,6 +1,6 @@
 package com.gestaofrota.abastecimento.handler;
 
-import com.gestaofrota.veiculo.handler.ApiErrorResponse;
+import com.gestaofrota.abastecimento.handler.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

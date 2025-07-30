@@ -1,6 +1,6 @@
 package com.gestaofrota.motorista.handler;
 
-import com.gestaofrota.veiculo.handler.ApiErrorResponse;
+import com.gestaofrota.motorista.handler.ApiErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
